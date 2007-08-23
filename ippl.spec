@@ -1,6 +1,6 @@
 %define name ippl
 %define version 1.99.5
-%define release %mkrel 9
+%define release %mkrel 10
 
 Summary: Logs TCP, ICMP and UDP connections
 Name: %{name}
