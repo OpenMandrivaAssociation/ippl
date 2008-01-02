@@ -16,6 +16,7 @@ Group: Monitoring
 Buildrequires:	libpcap-devel
 Buildrequires:  byacc
 Buildrequires:  flex
+Buildroot: %{_tmppath}/%{name}-buildroot
 Requires(pre): chkconfig
 
 %description
