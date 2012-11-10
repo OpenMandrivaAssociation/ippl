@@ -1,0 +1,38 @@
+--- ippl.conf.log	Wed Sep  8 11:21:35 1999
++++ ippl.conf	Wed Sep  8 11:22:51 1999
+@@ -5,7 +5,7 @@
+ # ---------
+ # Specify the user (declared in /etc/passwd) used to run the
+ # logging threads.
+-#runas nobody
++runas nobody
+ 
+ # Resolve hostnames?
+ # ------------------
+@@ -15,7 +15,7 @@
+ # Use ident?
+ # ----------
+ # Uncomment the line below to enable IDENT lookups
+-#ident
++ident
+ 
+ # Log end of TCP connections ?
+ # ----------------------------
+@@ -31,7 +31,7 @@
+ # -------------
+ # Uncomment this line if you want to log messages into a /var/log/ippl.log
+ # See ippl.conf(5) for the syntax.
+-#log-in all /var/log/ippl/all.log
++log-in all /var/log/ippl/all.log
+ #log-in udp /var/log/ippl/udp.log
+ 
+ # Protocols logged
+@@ -46,7 +46,7 @@
+ # If you want to see the destination address, the ports, etc
+ # Or if you want to log the minimal information.
+ # See ippl.conf(5) for details.
+-#logformat detailed all
++logformat detailed all
+ 
+ # Filtering of packets logged
+ # ---------------------------
