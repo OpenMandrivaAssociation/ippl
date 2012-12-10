@@ -1,19 +1,20 @@
 Summary:	Logs TCP, ICMP and UDP connections
 Name:		ippl
 Version:	1.99.5
-Release:	%mkrel 13
+Release:	%mkrel 12
 License:	GPL
 Group:		Monitoring
 URL:		http://www.via.ecp.fr/~hugo/ippl/
-Source:		http://pltplp.net/ippl/archive/dev/%{name}-%{version}.tar.bz2
+Source0:		http://pltplp.net/ippl/archive/dev/%{name}-%{version}.tar.bz2
 Source2:	ippl.init
 Source3:	ippl.log
 Patch0:		%{name}-log.patch
+patch1:		ippl-1.99.5.printf.patch
+patch2:		ippl-1.99.5.nostrip.patch
 Requires(pre): chkconfig
 Buildrequires:	libpcap-devel
 Buildrequires:	byacc
 Buildrequires:	flex
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 ippl is a configurable IP protocols logger. It currently logs incoming ICMP
@@ -26,6 +27,8 @@ iplogger.
 %setup -q
 
 %patch0 -p0 -b .log
+%patch1 -p1 -b .printf
+%patch2 -p1 -b .nostrip
 
 %build
 
@@ -34,7 +37,6 @@ iplogger.
 %make
 
 %install
-rm -rf %{buildroot}
 
 install -d %{buildroot}%{_sysconfdir}
 install -d %{buildroot}%{_initrddir}
@@ -58,9 +60,6 @@ if [ $1 = 0 ]; then
    /sbin/chkconfig --del ippl
 fi
 
-%clean
-rm -rf %{buildroot}
-
 %files
 %defattr(-,root,root)
 %doc BUGS CREDITS HISTORY INSTALL LICENSE README TODO
@@ -72,3 +71,37 @@ rm -rf %{buildroot}
 %{_mandir}/man5/ippl.conf.*
 %{_mandir}/man8/ippl.*
 %{_sbindir}/*
+
+
+%changelog
+* Wed Oct 29 2008 Oden Eriksson <oeriksson@mandriva.com> 1.99.5-12mdv2009.1
++ Revision: 298262
+- rebuilt against libpcap-1.0.0
+
+* Sun Jul 20 2008 Oden Eriksson <oeriksson@mandriva.com> 1.99.5-11mdv2009.0
++ Revision: 239035
+- rebuild
+
+  + Olivier Blin <oblin@mandriva.com>
+    - restore BuildRoot
+
+  + Thierry Vignaud <tvignaud@mandriva.com>
+    - kill re-definition of %%buildroot on Pixel's request
+
+* Thu Aug 23 2007 Thierry Vignaud <tvignaud@mandriva.com> 1.99.5-10mdv2008.0
++ Revision: 70274
+- kill file require on chkconfig
+
+
+* Fri Jul 29 2005 Nicolas Lécureuil <neoclust@mandriva.org> 1.99.5-8mdk
+- Fix BuildRequires
+
+* Thu Jul 14 2005 Oden Eriksson <oeriksson@mandriva.com> 1.99.5-7mdk
+- rebuilt against new libpcap-0.9.1 (aka. a "play safe" rebuild)
+
+* Thu Jul 07 2005 Lenny Cartier <lenny@mandrakesoft.com> 1.99.5-6mdk
+- rebuild
+
+* Thu May 27 2004 Lenny Cartier <lenny@mandrakesoft.com> 1.99.5-5mdk
+- rebuild
+

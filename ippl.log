@@ -1,0 +1,6 @@
+/var/log/ippl/all.log {
+    weekly
+    postrotate
+        /usr/bin/killall  -HUP ippl 
+    endscript
+}

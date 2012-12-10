@@ -1,0 +1,11 @@
+--- ippl-1.99.5/Makefile.in.nostrip	2000-01-20 03:23:32.000000000 +0300
++++ ippl-1.99.5/Makefile.in	2012-11-12 11:45:19.105335356 +0400
+@@ -18,7 +18,7 @@ doc:
+ 
+ install: all
+ 	$(INSTALL) -d -m 755 $(SBINDIR)
+-	$(INSTALL) -s -m 755 source/ippl $(SBINDIR)/ippl
++	$(INSTALL) -m 755 source/ippl $(SBINDIR)/ippl
+ 	$(INSTALL) -d -m 755 $(ETCDIR)
+ 	[ -f $(CONFIGURATION_FILE) ] || \
+ 	  $(INSTALL) -m 644 ippl.conf $(CONFIGURATION_FILE)

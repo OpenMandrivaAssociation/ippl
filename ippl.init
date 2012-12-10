@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+#	This shell script takes care of starting and stopping
+#       tcplog and icmplog.
+#
+# chkconfig: 345 45 45
+# description:  These two programs let you log tcp and icmp connections in 
+#		syslog, along with the hostname. They are just something 
+#		whipped up quickly, and could be improved alot - especially 
+#		the icmp logging program. 
+#
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# Check that networking is up.
+[ ${NETWORKING} = "no" ] && exit 0
+
+# See how we were called.
+case "$1" in
+  start)
+	# Start daemons.
+	echo -n "Starting ippl: "
+	daemon ippl
+        echo
+	touch /var/lock/subsys/ippl
+        ;;
+  stop)
+	# Stop daemons.
+	echo -n "Shutting down ippl: "
+	killproc ippl
+	echo
+	rm -f /var/lock/subsys/ippl 
+	;;
+  restart)
+        $0 stop
+        $0 start
+        ;;
+  status)
+        status ippl
+        ;;
+  *)
+	echo "Usage: ippl {start|stop|restart|status}"
+	exit 1
+esac
+
+exit 0
