@@ -1,0 +1,9 @@
+[Unit]
+Description=Ippl - TCP, ICMP and UDP connections Logger
+After=network.target
+
+[Service]
+ExecStart=/usr/sbin/ippl
+
+[Install]
+WantedBy=multi-user.target

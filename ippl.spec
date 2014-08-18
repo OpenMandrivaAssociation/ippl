@@ -1,17 +1,20 @@
 Summary:	Logs TCP, ICMP and UDP connections
 Name:		ippl
 Version:	1.99.5
-Release:	%mkrel 12
+Release:	14
 License:	GPL
 Group:		Monitoring
 URL:		http://www.via.ecp.fr/~hugo/ippl/
-Source0:		http://pltplp.net/ippl/archive/dev/%{name}-%{version}.tar.bz2
-Source2:	ippl.init
-Source3:	ippl.log
+Source0:	http://pltplp.net/ippl/archive/dev/%{name}-%{version}.tar.bz2
+Source1:	%{name}.service
+Source2:	%{name}.log
 Patch0:		%{name}-log.patch
-patch1:		ippl-1.99.5.printf.patch
-patch2:		ippl-1.99.5.nostrip.patch
-Requires(pre): chkconfig
+Patch1:		ippl-1.99.5.printf.patch
+Patch2:		ippl-1.99.5.nostrip.patch
+Requires(pre): 	chkconfig
+Requires(post): systemd-units
+Requires(preun): systemd-units
+Requires(postun): systemd-units
 Buildrequires:	libpcap-devel
 Buildrequires:	byacc
 Buildrequires:	flex
@@ -31,15 +34,11 @@ iplogger.
 %patch2 -p1 -b .nostrip
 
 %build
-
 %configure --with-user=nobody
-
 %make
 
 %install
-
 install -d %{buildroot}%{_sysconfdir}
-install -d %{buildroot}%{_initrddir}
 install -d %{buildroot}%{_sysconfdir}/logrotate.d
 install -d %{buildroot}/var
 install -d %{buildroot}/var/log
@@ -49,21 +48,32 @@ make ROOT=%{buildroot} install
 
 touch %{buildroot}/var/log/ippl/all.log
 
-install -m755 %{SOURCE2} %{buildroot}%{_initrddir}/ippl
-install -m644 %{SOURCE3} %{buildroot}%{_sysconfdir}/logrotate.d/ippl
+install -D -m 644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
+install -m 644 %{SOURCE2} %{buildroot}%{_sysconfdir}/logrotate.d/ippl
 
 %post
-/sbin/chkconfig --add ippl
+if [ $1 -eq 1 ] ; then 
+    # Initial installation 
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+fi
 
 %preun
-if [ $1 = 0 ]; then
-   /sbin/chkconfig --del ippl
+if [ $1 -eq 0 ] ; then
+    # Package removal, not upgrade
+    /bin/systemctl --no-reload disable %{name}.service > /dev/null 2>&1 || :
+    /bin/systemctl stop %{name}.service > /dev/null 2>&1 || :
+fi
+
+%postun
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+if [ $1 -ge 1 ] ; then
+    # Package upgrade, not uninstall
+    /bin/systemctl try-restart %{name}.service >/dev/null 2>&1 || :
 fi
 
 %files
-%defattr(-,root,root)
 %doc BUGS CREDITS HISTORY INSTALL LICENSE README TODO
-%{_initrddir}/ippl
+%{_unitdir}/%{name}.service
 %config(noreplace) %{_sysconfdir}/ippl.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/ippl
 # %dir /var/log/ippl
@@ -71,37 +81,3 @@ fi
 %{_mandir}/man5/ippl.conf.*
 %{_mandir}/man8/ippl.*
 %{_sbindir}/*
-
-
-%changelog
-* Wed Oct 29 2008 Oden Eriksson <oeriksson@mandriva.com> 1.99.5-12mdv2009.1
-+ Revision: 298262
-- rebuilt against libpcap-1.0.0
-
-* Sun Jul 20 2008 Oden Eriksson <oeriksson@mandriva.com> 1.99.5-11mdv2009.0
-+ Revision: 239035
-- rebuild
-
-  + Olivier Blin <oblin@mandriva.com>
-    - restore BuildRoot
-
-  + Thierry Vignaud <tvignaud@mandriva.com>
-    - kill re-definition of %%buildroot on Pixel's request
-
-* Thu Aug 23 2007 Thierry Vignaud <tvignaud@mandriva.com> 1.99.5-10mdv2008.0
-+ Revision: 70274
-- kill file require on chkconfig
-
-
-* Fri Jul 29 2005 Nicolas Lécureuil <neoclust@mandriva.org> 1.99.5-8mdk
-- Fix BuildRequires
-
-* Thu Jul 14 2005 Oden Eriksson <oeriksson@mandriva.com> 1.99.5-7mdk
-- rebuilt against new libpcap-0.9.1 (aka. a "play safe" rebuild)
-
-* Thu Jul 07 2005 Lenny Cartier <lenny@mandrakesoft.com> 1.99.5-6mdk
-- rebuild
-
-* Thu May 27 2004 Lenny Cartier <lenny@mandrakesoft.com> 1.99.5-5mdk
-- rebuild
-
