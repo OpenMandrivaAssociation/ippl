@@ -1,7 +1,7 @@
 Summary:	Logs TCP, ICMP and UDP connections
 Name:		ippl
 Version:	1.99.5
-Release:	15
+Release:	16
 License:	GPL
 Group:		Monitoring
 URL:		http://www.via.ecp.fr/~hugo/ippl/
