@@ -4,7 +4,7 @@ Version:	1.99.5
 Release:	16
 License:	GPL
 Group:		Monitoring
-URL:		http://www.via.ecp.fr/~hugo/ippl/
+URL:		https://www.via.ecp.fr/~hugo/ippl/
 Source0:	http://pltplp.net/ippl/archive/dev/%{name}-%{version}.tar.bz2
 Source1:	%{name}.service
 Source2:	%{name}.log
