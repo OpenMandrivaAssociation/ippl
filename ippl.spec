@@ -15,6 +15,11 @@ Requires(pre): 	chkconfig
 Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 Buildrequires:	libpcap-devel
 Buildrequires:	byacc
 Buildrequires:	flex
